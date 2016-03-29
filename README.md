@@ -1,9 +1,9 @@
 # 2013_stressed_ants_in_warmingchambers
 
-#Author: Curtis A. Provencher and Andrew D. Nguyen
+###Author: Curtis A. Provencher and Andrew D. Nguyen   
 
-Date initiated:  
-Date modified:  
+Date initiated:  2016-03-29
+Last Date modified:  
 
 Funding source:   
 
