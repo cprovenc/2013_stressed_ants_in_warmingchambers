@@ -14,6 +14,7 @@ Funding source:   National Science Foundation, Division of Environmental Biology
 
 <div id='id-section1'/>
 ##Project Overview
+This is an National Science Foundation supported project aiming to understand how climate change will impact critical species that perform key ecosystem services. 
 
 <div id='id-section2'/>
 ##Objecives and Hypotheses
