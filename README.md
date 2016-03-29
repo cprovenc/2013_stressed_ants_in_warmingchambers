@@ -5,7 +5,7 @@
 Date initiated:  2016-03-29
 Last Date modified:  
 
-Funding source:   
+Funding source:   National Science Foundation, Division of Environmental Biology (1136644)       
 
 # Table of contents
 1. [Project Overview](#id-section1)
