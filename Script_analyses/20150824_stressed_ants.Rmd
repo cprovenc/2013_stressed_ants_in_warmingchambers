@@ -1,15 +1,19 @@
 ---
 title: "Will climate change cause temperature stress?"
-author: "Andrew Nguyen"
-date: "2015-August-24"
-output: pdf_document
+author: "Curtis A. Provencher"
+date: "2016-March-29"
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 2  
 ---
 #Rationale
 
+###Anthropogenic warming is likely to drive shifts in phenology, distribution, and performance of species in Eastern deciduous forests.  Predicting these ecological cascades will depend on understanding how a primary seed disperser, the keystone ant genus Aphaenogaster, responds to warming. Temperatures surpassing a species’ lethal thermal limit will clearly be detrimental, but unfavorably high temperatures may impose stress substantially before that limit is reached; characterizing such sublethal responses will be vital for predicting Aphaenogaster’s future performance. Here we test for a physiological stress response in Aphaenogaster workers from a northern and southern deciduous forest under simulated climate warming.
+
 #Experimental protocol
 
-#Samples
-
+#loading libraries
 ```{r loading libraries}
 library(plyr)
 library(dplyr)
@@ -17,6 +21,31 @@ library(ggplot2)
 library(tidyr)
 library(MASS)
 ```
+
+# Metadata and loading in dataset   
+### Name and contact info: Curits Provencher, cprovenc@uvm.edu   
+### Study name: Foraging ant workers experience sub-lethal stress under experimental climate warming at both northern and southern range boundaries	   
+### Financial support: National Science Foundation, Division of Environmental Biology (1136644)   
+### Methods of data collection:    
+### Experimental units for each variable:
+- Sample: 3 ants
+- Bait Temperature: degrees Celsius
+- RNA concentration: ng/uL
+- Gene cycle threshold: Fluorescent readings taking at 0.1 threshold during cyles 9-15
+- cDNA concentration: ng/uL
+- H~2~O and cDNA volume: uL
+#Data layout and structure:
+```{r data and metadata}
+#warm<-read.csv("2015_warming_prelim.csv") #reading in the data set
+warm<-read.csv("../Data//20160211_DF_Aph_Cham_LNSampling.csv")
+str(warm) # visualizing the properties of the dataset
+dim(warm) # looking at the dimensions...rows,columns
+
+#calculating # of samples per site per chamber
+knitr::kable(ddply(warm,.(Site,as.factor(Cham)),summarize,num=length(N)))
+```
+
+
 #Calculating gene expression   
 GOI= gene of interest  
 HKG= house keeping gene   
@@ -24,13 +53,6 @@ HKG= house keeping gene
 $\frac{2^{(GOI_{mean}-GOI_{sample})}}{2^{(HKG_{mean}-HKG_{sample})}}$
 
 ```{r calculating gxp}
-#warm<-read.csv("2015_warming_prelim.csv") #reading in the data set
-warm<-read.csv("../Data//20160211_DF_Aph_Cham_LNSampling.csv")
-head(warm,4) #big data, so only looking at first 4 lines
-tail(warm,4) # looking at the last 4 lines
-names(warm) #looking at the names of the headings in data set
-dim(warm) # looking at the dimensions...rows,columns
-
 #calculating the mean bait_temp
 warm$mean.temps<-rowMeans(warm[,8:11],na.rm=T)
 
@@ -49,10 +71,11 @@ merg<-as.data.frame(cbind(warm,dd[,2:4]/dd[,1]))
 
 ```
 
-#Stats!!
-##response:
-##predictor
-```{r stats}
+#Statistics    
+### Predictor: site (HF or DF) and ground temperature (degrees Celsius)
+### Response: HSP40, HSP70, and HSP83 gene expression
+
+```{r stats, eval=FALSE}
 #changing collection date into a facto
 #merg$Collection.Date<-as.factor(as.character(merg$Collection.Date))
 
@@ -65,11 +88,12 @@ merg2<-subset(merg,merg$hsp83<100)
 new<-subset(merg2,merg2$hsp70 != "NA")
 new2<-subset(merg2,merg2$hsp40 != "NA");new2<-new2[-37,]
 
-mod1<-stepAIC(lm(log10(hsp70)~Site*mean.temps+RIN_Value,data=new),direction="backward")
-summary(mod1)
+#mod1<-stepAIC(lm(log10(hsp70)~Site*mean.temps+RIN_Value,data=new),direction="backward")
+#summary(mod1)
 
 mod1.1<-lm(log10(hsp70)~Site*mean.temps+RIN_Value,data=new)
 summary(mod1.1)
+#write.csv(new,"test.csv")
 
 #model for hsp40
 mod2<-stepAIC(lm(log10(hsp40)~Site*mean.temps+RIN_Value,data=new2),direction="backward");summary(mod2)
@@ -116,7 +140,7 @@ summary(aov(mean.temps~Site,data=subset(merg2,merg2$Year=="2013")))
 ggplot(merg2,aes(y=mean.temps,x=Site))+geom_boxplot()
 ```
 
-```{r 1000/ct method}
+```{r 1000/ct method, eval=FALSE}
 #using merg 2, convertin xp to 100/ct
 names(merg2)
 
@@ -160,7 +184,7 @@ mod24<-stepAIC(lm(CT_40~Site*mean.temps+CT_18s,data=diff.way2),direction="backwa
 
 ```
 
-```{r ggplots}
+```{r ggplots, eval=FALSE}
 #adjusting sizing
 sizzy<- theme_bw()+
   theme(axis.title.y=element_text(size=rel(2)),axis.title.x=element_text(size=rel(3)))+
@@ -468,8 +492,8 @@ return(FinalRes)
 ```
 
 #normfinder, findign the best HKG
-```{r HKG}
-b<-read.csv("test.csv")
+```{r HKG, eval=FALSE}
+b<-read.csv("../Data/test.csv")
 bb<-subset(b,b$CT_18s>1 & b$CT_actin > 1 & b$CT_gapdh > 1)
 dim(bb)
 

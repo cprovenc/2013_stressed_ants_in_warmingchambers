@@ -18,6 +18,6 @@ This is an National Science Foundation supported project aiming to understand ho
 
 <div id='id-section2'/>
 ##Objecives and Hypotheses
-
+In this study, we assess the potential impacts of experimental warming in wild populations of the ant genus <i>Aphaenogaster</i> from a southern (Duke Forest, NC) and northern (Harvard Forest, MA) site near their range boundaries. Using Hsps as a proxy for sub lethal stress, we will determine the extent simulated warming between a northern and southern site imposes costs on foraging ant workers.
 <div id='id-section3'/>
 ##Repository Layout
