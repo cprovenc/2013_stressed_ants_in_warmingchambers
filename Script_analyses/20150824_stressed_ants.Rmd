@@ -22,27 +22,24 @@ library(tidyr)
 library(MASS)
 ```
 
-# Metadata and loading in dataset   
-### Name and contact info: Curits Provencher, cprovenc@uvm.edu   
-### Study name: Foraging ant workers experience sub-lethal stress under experimental climate warming at both northern and southern range boundaries	   
-### Financial support: National Science Foundation, Division of Environmental Biology (1136644)   
-### Methods of data collection:    
-### Experimental units for each variable:
-- Sample: 3 ants
-- Bait Temperature: degrees Celsius
-- RNA concentration: ng/uL
-- Gene cycle threshold: Fluorescent readings taking at 0.1 threshold during cyles 9-15
-- cDNA concentration: ng/uL
-- H~2~O and cDNA volume: uL
-#Data layout and structure:
+
 ```{r data and metadata}
 #warm<-read.csv("2015_warming_prelim.csv") #reading in the data set
-warm<-read.csv("../Data//20160211_DF_Aph_Cham_LNSampling.csv")
+#Date initiated- 4/11/2016
+# Date Modified- 4/11/2016
+#Affiliations- University of Vermont, University of North Carolina, Harvard Forest, Duke Forest, University of Tennessee
+#Name and contact info: Curtis Provencher, cprovenc@uvm.edu, cprovenc3@gmail.com. Andrew Nguyen, adnguyen@uvm.edu, anbe642@gmail.com
+#Study name: The effects of experimental warming on forest ants 
+#Financial support: National Science Foundation, Division of Environmental Biology (1136644) 
+#Methods of data collection: Experimental warming chamebrs set up at a northern (Harverd Forest, MA) and southern site (Duke Forest, NC) warming groud temperature up to 5.5 degrees Celsius. In 2013-2014, ants were baited in each warming chamber and three ants were collected per tube and flash frozen in the field. For each sample we isolated RNA and quantified their stress response using heat-shock proteins (hsp70, hsp83, hsp40). For housekeeping genes we quantified 18s rRNA, actin, and gapdh. Also included in this worksheet is the calculations to convert RNA to cDNA. 
+#Experimental units for each variable: Collection Date(YearMonthDay), Site (HF- Harvard Forest, DF- Duke Forest), chamber(chamber number), sample(3 ants per tube), window(area of chamber), BaitTemp(degrees Celsius), RNA conc.(ng/uL), Isolation date(Date RNA isolated, YearMonthDay), CT18s, 40, 70, 83, actin, gapdh(Threshold- 0.1, basline cycle 9-15), RIN(RNA integrity), cDNA(ng/uL), vol cDNA and H20(uL)
+#Data layout and structure:
+warm<-read.csv("../Data//20160411_FinalExperimentalWarmingDataset.csv",skip=10)
 str(warm) # visualizing the properties of the dataset
 dim(warm) # looking at the dimensions...rows,columns
 
 #calculating # of samples per site per chamber
-knitr::kable(ddply(warm,.(Site,as.factor(Cham)),summarize,num=length(N)))
+knitr::kable(ddply(warm,.(Site,as.factor(Cham)),summarize,num=length(n)))
 ```
 
 
@@ -53,6 +50,8 @@ HKG= house keeping gene
 $\frac{2^{(GOI_{mean}-GOI_{sample})}}{2^{(HKG_{mean}-HKG_{sample})}}$
 
 ```{r calculating gxp}
+
+
 #calculating the mean bait_temp
 warm$mean.temps<-rowMeans(warm[,8:11],na.rm=T)
 
