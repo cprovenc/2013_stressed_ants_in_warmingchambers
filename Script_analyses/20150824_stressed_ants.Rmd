@@ -1,7 +1,7 @@
 ---
 title: "Experimental warming imposes sub-lethal costs in the common forest ants, *Aphaenogaster*"
 author: "Curtis A. Provencher"
-date: "2016-March-29"
+date: "2016-April-20"
 output:
   pdf_document:
     toc: true
@@ -35,15 +35,16 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(MASS)
+library(formatR)
 ```
 
 #Loading in the data and accompanying metadata
-```{r data and metadata}
+```{r tidy_source(width.cutoff = 70)}
 # Date initiated- 8/24/2015
 # Date Modified- 4/18/2016
 # Affiliations- University of Vermont, University of North Carolina, Harvard Forest,
   #Duke Forest, University of Tennessee
-# Name and contact info: Curtis Provencher, cprovenc@uvm.edu, cprovenc3@gmail.com. 
+# Name and contact info: Curtis Provencher, cprovenc@uvm.edu, cprovenc3@gmail.com.
   #Andrew Nguyen, adnguyen@uvm.edu, anbe642@gmail.com
 # Study name: The effects of experimental warming on forest ants    
 # Financial support: National Science Foundation, Division of Environmental Biology
@@ -65,17 +66,17 @@ warm<-read.csv("../Data//20160411_FinalExperimentalWarmingDataset.csv",skip=10)
 ```
 
 ## Quality control of expression values
-```{r}
-######################################################################
+```{r tidy=TRUE}
+
 #Quality control
-######################################################################
+
 #ranges of gene expression
 apply(warm[,14:19],2,range,na.rm=TRUE)
 
 #filter out very lowly expressed genes
 #warm.hsp70<-subset(warm,warm$CT_70<34);dim(warm.hsp70)
-warm.long<-gather(warm,Genes,GXP,CT_18s:CT_83) ### converting to long format
-qc.samples<-subset(warm.long,warm.long$GXP>34) ###identifying the ones that have too low expression
+warm.long<-gather(warm,Genes,GXP,CT_18s:CT_83) # converting to long format
+qc.samples<-subset(warm.long,warm.long$GXP>34) #identifying the ones that have too low expression
 n.exclude<-qc.samples$n
 dim(warm[-n.exclude,]) #excluding values that are too low in expression
 warm<-warm[-n.exclude,]
@@ -84,7 +85,7 @@ warm<-warm[-n.exclude,]
 ```
 
 ## Visualizing the properties of the dataset
-```{r}
+```{r tidy=TRUE}
 # Visualizing the properties of the dataset
 str(warm) 
 
@@ -94,9 +95,9 @@ knitr::kable(ddply(warm,.(Site,as.factor(Cham)),summarize,num=length(n)))
 # Number of samples per site
 knitr::kable(ddply(warm,.(Site),summarize,num=length(n)))
 
-### Calculating the bait temperatures
+# Calculating the bait temperatures
 warm$baittemp.ave<-apply(warm[,8:11],1,mean,na.rm=TRUE)
-#knitr::kable(ddply(warm,.(Site),summarize,range(na.exclude(baittemp.ave))))
+##knitr::kable(ddply(warm,.(Site),summarize,range(na.exclude(baittemp.ave))))
 
 # Range of temperatures for duke forest
 range(subset(warm,warm$Site=="DF")$baittemp.ave)
@@ -116,21 +117,22 @@ length(na.exclude(warm$CT_40))
 ```
 
 
-```{r plotting results ggplot}
+```{r tidy=TRUE}
 #the overall theme for ggplot
-T<-theme_bw()+theme(text=element_text(size=22),axis.text=element_text(size=22),axis.title.y=element_text(margin=margin(20,20,20,20)),axis.title.x=element_text(margin=margin(20,0,0,0)), plot.margin = unit(c(1, 1, 1, 0), "lines"), panel.grid.major=element_blank(), panel.grid.minor.x = element_blank(), panel.grid = element_blank(), legend.key = element_blank(),legend.position=c(.1,.85))
+T<-theme_bw()+theme(text=element_text(size=22), axis.text=element_text(size=22), axis.title.y = element_text(margin=margin(20,20,20,20)), axis.title.x = element_text(margin=margin(20,0,0,0)), plot.margin = unit(c(1, 1, 1, 0), "lines"), panel.grid.major = element_blank(), panel.grid.minor.x = element_blank(), panel.grid = element_blank(), legend.key = element_blank(), legend.position=c(.1,.85))
 ```
 
 
 #Checking internal control
-```{r}
+```{r tidy=TRUE}
 #standard deviation in CT value for each gene
 apply(warm[,14:19],2,sd,na.rm=TRUE)
 
+```
 
-#################################################
+
 ##Evaluating 18s rRNA
-#################################################
+```{r tidy=TRUE}
 hkg.mod1<-lm((1000/warm$CT_18s)~baittemp.ave*Site+RIN_Value, data=warm)
 summary(hkg.mod1)
 
@@ -140,27 +142,27 @@ ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_18s),colour=factor(Site)))+geom_point(
 
 # 18s expression overall
 ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_18s)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(30,220),breaks=seq(30,220,20),"18s rRNA gene expression (1000/CT)")
+```
 
-#################################################
 ##Evaluating actin
-#################################################
+```{r tidy=TRUE}
 hkg.mod2<-lm(warm$CT_actin~baittemp.ave*Site+RIN_Value, data=warm)
 summary(hkg.mod2)
 
 # overall actin expression by temp
 ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_actin)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(30,50),breaks=seq(30,50,5),"Actin gene expression (1000/CT)")
 
+```
 
-#################################################
 ##Evaluating gapdh
-#################################################
+```{r tidy=TRUE}
 hkg.mod3<-lm(warm$CT_gapdh~baittemp.ave*Site+RIN_Value, data=warm)
 summary(hkg.mod3)
 
 # overall gapdh expression by temp
 ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_gapdh)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(30,50),breaks=seq(30,50,5),"Gapdh gene expression (1000/CT)")
 
-#################################################
+
 
 
 
@@ -168,78 +170,91 @@ ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_gapdh)))+geom_point(size=3)+T+geom_smo
 
 
 #Statistics
-#CT values themselves served as the measure of gene expression with 18s rRNA as the internal control.
+###CT values themselves served as the measure of gene expression with 18s rRNA and actin serving as internal controls.
 
+
+## Hsp83 regression models
+```{r tidy=TRUE}
+#######################################################
+#hsp83 regresssion model
+#######################################################
+
+# MODEL WITH 18s- temp effect, site effect, and site by temp interaction 
+hsp83.mod<-lm(CT_83~baittemp.ave*Site+RIN_Value+CT_18s,data=warm)
+summary(stepAIC(hsp83.mod,direction="backward"))
+
+
+# MODEL WITH ACTIN- no interaction or site effect seen
+hsp83.act.mod<-lm(CT_83~baittemp.ave*Site+RIN_Value+CT_actin,data=warm)
+summary(stepAIC(hsp83.act.mod,direction="backward"))
+
+# hsp83 plot by site
+ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_83),colour=factor(Site)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp83 gene expression (1000/CT)")
+
+# hsp83 plot overall
+ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_83)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp83 gene expression (1000/CT)")
+
+#visualize hsp83 model
+par(mfrow=c(2,2))
+plot(stepAIC(hsp83.mod,direction="backward"))
+par(mfrow=c(1,1))
+```
 
 
 ## Hsp70 regression models
-```{r stats on ct values}
+```{r tidy=TRUE}
 #######################################################
 #hsp70 regression model
 #######################################################
+
+# MODEL WITH 18s-  no site effect seen 
 hsp70.mod<-lm(CT_70~baittemp.ave*Site+RIN_Value+CT_18s,data=warm)
-#summary(hsp70.mod)
 summary(stepAIC(hsp70.mod,direction="backward"))
 
-# model with actin
+
+# MODEL WITH ACTIN- site effect seen 
 hsp70.act.mod<-lm(CT_70~baittemp.ave*Site+RIN_Value+CT_actin,data=warm)
-#summary(hsp70.mod)
 summary(stepAIC(hsp70.act.mod,direction="backward"))
 
-# hsp70 plot
+# hsp70 model by site
+ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_70),colour=factor(Site)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp70 gene expression (1000/CT)")
+
+# hsp70 plot overall
 ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_70)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp70 gene expression (1000/CT)")
 
 
-#visualizing hsp70 regression model
+# visualizing hsp70 regression model
 par(mfrow=c(2,2))
 plot(stepAIC(hsp70.mod,direction="backward"))
 par(mfrow=c(1,1))
 
 ```
 
-## Hsp83 regression models
-```{r}
-#######################################################
-#hsp83 regresssion model
-#######################################################
-hsp83.mod<-lm(CT_83~baittemp.ave*Site+RIN_Value+CT_18s,data=warm)
-#summary(hsp83.mod)
-summary(stepAIC(hsp83.mod,direction="backward"))
-
-#model with actin
-hsp83.act.mod<-lm(CT_83~baittemp.ave*Site+RIN_Value+CT_actin,data=warm)
-#summary(hsp83.mod)
-summary(stepAIC(hsp83.act.mod,direction="backward"))
-
-# hsp83 plot
-ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_83),colour=factor(Site)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp83 gene expression (1000/CT)")
-
-#visualize hsp83 model
-par(mfrow=c(2,2))
-plot(stepAIC(hsp83.mod,direction="backward"))
-par(mfrow=c(1,1))
-#######################################################
-```
 
 ## Hsp40 regression models
-```{r}
+```{r tidy=TRUE}
 #######################################################
 #hsp40 regression model
 #######################################################
+
+# MODEL WITH 18s- site trend seen
 warm.40<-subset(warm,warm$CT_40!="NA" & RIN_Value !="NA")
 hsp40.mod<-lm(CT_40~baittemp.ave*Site+RIN_Value+CT_18s,data=warm.40)
-#summary(hsp40.mod)
 summary(stepAIC(hsp40.mod,direction="both"))
 
-#MODEL WITH ACTIN
+
+# MODEL WITH ACTIN- no site trend
 hsp40.act.mod<-lm(CT_40~baittemp.ave*Site+RIN_Value*CT_actin,data=warm.40)
-#summary(hsp40.mod)
 summary(stepAIC(hsp40.act.mod,direction="both"))
 
 
-# hsp40 plot
+# hsp40 plot by site
 ggplot(warm.40,aes(x=baittemp.ave,y=(1000/CT_40),colour=factor(Site)))+geom_point(size=2.5)+T+geom_smooth(method="lm",se=FALSE,size=2.5)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,45),breaks=seq(25,45,5),"Hsp40 gene expression (1000/CT)")
 
+# hsp40 plot overall
+ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_40)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,45),breaks=seq(25,45,5),"Hsp40 gene expression (1000/CT)")
+
+# visualizing hsp40 regression model
 par(mfrow=c(2,2))
 plot(stepAIC(hsp40.mod,direction="backward"))
 par(mfrow=c(1,1))
