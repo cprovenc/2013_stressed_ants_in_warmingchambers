@@ -1,5 +1,5 @@
 ---
-title: "Will climate change cause temperature stress?"
+title: "Experimental warming imposes sub-lethal costs in the common forest ants, *Aphaenogaster*"
 author: "Curtis A. Provencher"
 date: "2016-March-29"
 output:
@@ -13,7 +13,22 @@ output:
 
 #Experimental protocol
 
-#loading libraries
+## Experimental warming sites and chambers
+###We collected ants from two experimental warming sites, Duke Forest (DF) in Durham, North Carolina and Harvard Forest (HF) in Petersham, Massachusetts. At both sites, twelve experimental open-top warming chambers were established in January of 2010 (Pelini et al. 2011). Each chamber is 5 m in diameter and 1.2 m tall with a 2–3 cm gap at the bottom to allow ants and other organisms to move in and out. 
+###Nine chambers blew warmed air from 1.5–5.5°C above ambient temperatures at half-degree steps with one chamber at each temperature treatment, three chambers blew ambient, and three chamberless control plots. (see Pelini et al., 2011 for a detailed description of the chambers).
+
+## Field Collections
+###Samples were chosen on a relatively “hot” and “cool” day in the summer of 2013 at HF and both 2013 and 2014 at DF in order to capture as wide a temperature range as possible (See Table 1 for sampling dates). Eight artificial next boxes arrayed in pairs in each cardinal direction were placed approximately one meter apart in each chamber. Bait cards holding crumbled pecan sandwiches were placed between each set of nest boxes to sample foraging workers outside the nest box begin exposed to the warmed ground temperature. Three random foragers from each bait station were selected at random and grouped together to be immediately flash frozen in liquid nitrogen. Three replicate samples were collected from each chamber. To quantify temperatures the ants were experiencing at the time of collection, four ground temperature measurements were made for each bait collection with an infrared thermometer (ThermoScientific, USA). Samples were stored at -80° C until Hsp mRNA quantification. 
+
+## Quantifying Hsp Gene Expression
+###We quantified hsp40, hsp70, and hsp83 gene expression fold change relative to the housekeeping gene, 18s rRNA, actin, and gapdh from Aphaenogaster samples collected at the southern (DF) and northern (HF) warming chamber sites (See Table 2 for genes tested and primers used). Total mRNA from each sample was extracted and purified using the RNeazy micro kit (QIAGEN, USA). Each sample containing three frozen ants was homogenized in a Bullet blender (Next Advance Inc., USA) for two minutes at top speed (10) in 1.4mm zirconium silicate grinding beads (Quackenbush Co., Inc., USA) and 350 uL of RLT buffer (QIAGEN, USA). RNA samples were treated with DNAse I (QIAGEN, USA) to remove DNA contamination and purified following the manufacturer’s instructions. RNA concentration was verified using Qubit Fluorometric Quantitation (Invitrogen, USA) and RNA integrity was tested using a NanoDrop Bioanalyzer (ThermoScientific, USA). Samples were converted to cDNA with the High-Capacity cDNA Reverse Transcription Kit (Applied BiosystemsTM).  Abundance of each Hsp gene and the housekeeping gene was quantified with quantitative polymerase chain reaction (qPCR) using the ABI StepOnePlus Real-Time PCR system. Reactions took place in 10 uL volume with 1ng of cDNA, 250 nM total primer, and 5 uL of Power SYBR Green Master Mix (Life Technologies, USA). Cycling conditions began at an initial 95°C incubation for 2 min followed by 40 cycles of 95°C for 15 seconds, with 60°C annealing and extension for 60 seconds followed by 60 seconds at 70°C. Background fluorescence readings were taking during cycles 9 to 15 and cycle threshold values were acquired when fluorescence crossed a 0.1 threshold. Melt curve analyses following amplification validated the presence of a single amplicon and samples displaying nonspecific amplicons were manually checked and removed (Livak & Schmittgen 2001). 
+
+
+## Statistical Analysis
+###CT values themselves served as the measure of gene expression with 18s rRNA as the internal control. We tested the effects of local ground temperature, site, and interaction effects between site and temperature on relative Hsp gene expression fold change with a linear regression stepwise analysis using backwards selection. To control for RNA quality, RIN values were added as a covariate. 
+
+
+#Loading libraries
 ```{r loading libraries}
 library(plyr)
 library(dplyr)
@@ -24,15 +39,27 @@ library(MASS)
 
 #Loading in the data and accompanying metadata
 ```{r data and metadata}
-# Date initiated- 4/11/2016
-# Date Modified- 4/11/2016
-#Affiliations- University of Vermont, University of North Carolina, Harvard Forest, Duke Forest, University of Tennessee
-#Name and contact info: Curtis Provencher, cprovenc@uvm.edu, cprovenc3@gmail.com. Andrew Nguyen, adnguyen@uvm.edu, anbe642@gmail.com
-#Study name: The effects of experimental warming on forest ants    
-#Financial support: National Science Foundation, Division of Environmental Biology (1136644) 
-#Methods of data collection: Experimental warming chamebrs set up at a northern (Harvard Forest, MA) and southern site (Duke Forest, NC) warming groud temperature up to 5.5 degrees Celsius. In 2013-2014, ants were baited in each warming chamber and three ants were collected per tube and flash frozen in the field. For each sample we isolated RNA and quantified their stress response using heat-shock proteins (hsp70, hsp83, hsp40). For housekeeping genes we quantified 18s rRNA, actin, and gapdh. Also included in this worksheet is the calculations to convert RNA to cDNA. 
-#Experimental units for each variable: Collection Date(YearMonthDay), Site (HF- Harvard Forest, DF- Duke Forest), chamber(chamber number), sample(3 ants per tube),  window(area of chamber), BaitTemp(degrees Celsius), RNA conc.(ng/uL), Isolation date(Date RNA isolated, YearMonthDay), CT18s, 40, 70, 83, actin, gapdh(Threshold- 0.1, basline cycle 9-15), RIN(RNA integrity), cDNA(ng/uL), vol cDNA and H20(uL)   
-#Data layout and structure:
+# Date initiated- 8/24/2015
+# Date Modified- 4/18/2016
+# Affiliations- University of Vermont, University of North Carolina, Harvard Forest,
+  #Duke Forest, University of Tennessee
+# Name and contact info: Curtis Provencher, cprovenc@uvm.edu, cprovenc3@gmail.com. 
+  #Andrew Nguyen, adnguyen@uvm.edu, anbe642@gmail.com
+# Study name: The effects of experimental warming on forest ants    
+# Financial support: National Science Foundation, Division of Environmental Biology
+  #(1136644) 
+# Methods of data collection: Experimental warming chamebrs set up at a northern (Harvard
+  #Forest, MA) and southern site (Duke Forest, NC) warming groud temperature up to 5.5
+  #degrees Celsius. In 2013-2014, ants were baited in each warming chamber and three ants
+  #were collected per tube and flash frozen in the field. For each sample we isolated RNA
+  #and quantified their stress response using heat-shock proteins (hsp70, hsp83, hsp40).
+  #For housekeeping genes we quantified 18s rRNA, actin, and gapdh. Also included in this
+  #worksheet is the calculations to convert RNA to cDNA. 
+# Experimental units for each variable: Collection Date(YearMonthDay), Site (HF- Harvard
+  #Forest, DF- Duke Forest), chamber(chamber number), sample(3 ants per tube),  window(area
+  #of chamber), BaitTemp(degrees Celsius), RNA conc.(ng/uL), Isolation date(Date RNA
+  #isolated, YearMonthDay), CT18s, 40, 70, 83, actin, gapdh(Threshold- 0.1, basline cycle
+  #9-15), RIN(RNA integrity), cDNA(ng/uL), vol cDNA and H20(uL)   
 warm<-read.csv("../Data//20160411_FinalExperimentalWarmingDataset.csv",skip=10)
 
 ```
@@ -50,7 +77,7 @@ apply(warm[,14:19],2,range,na.rm=TRUE)
 warm.long<-gather(warm,Genes,GXP,CT_18s:CT_83) ### converting to long format
 qc.samples<-subset(warm.long,warm.long$GXP>34) ###identifying the ones that have too low expression
 n.exclude<-qc.samples$n
-dim(warm[-n.exclude,]) #ecluding values that are too low in expression
+dim(warm[-n.exclude,]) #excluding values that are too low in expression
 warm<-warm[-n.exclude,]
 ######################################################################
 ######################################################################
@@ -58,37 +85,45 @@ warm<-warm[-n.exclude,]
 
 ## Visualizing the properties of the dataset
 ```{r}
-str(warm) # visualizing the properties of the dataset
+# Visualizing the properties of the dataset
+str(warm) 
 
-
-#calculating # of samples per site per chamber
+# Calculating # of samples per site per chamber
 knitr::kable(ddply(warm,.(Site,as.factor(Cham)),summarize,num=length(n)))
 
-#number of samples per site!
+# Number of samples per site
 knitr::kable(ddply(warm,.(Site),summarize,num=length(n)))
 
-
-###caulcating the bait temperatures!
+### Calculating the bait temperatures
 warm$baittemp.ave<-apply(warm[,8:11],1,mean,na.rm=TRUE)
 #knitr::kable(ddply(warm,.(Site),summarize,range(na.exclude(baittemp.ave))))
-range(subset(warm,warm$Site=="DF")$baittemp.ave) # range of temperatures for duke forest
-range(subset(warm,warm$Site=="HF")$baittemp.ave) # range of temperatures for Harvard forest
 
-dim(warm) # looking at the dimensions...rows,columns
-# number of samples for hsp70
+# Range of temperatures for duke forest
+range(subset(warm,warm$Site=="DF")$baittemp.ave)
+# Range of temperatures for Harvard forest
+range(subset(warm,warm$Site=="HF")$baittemp.ave) 
+
+# Looking at the dimensions...rows,columns
+dim(warm) 
+# Number of samples for hsp70
 length(na.exclude(warm$CT_70))
-# number of samples for hsp83
+# Number of samples for hsp83
 length(na.exclude(warm$CT_83))
-# number of samples for hsp40
+# Number of samples for hsp40
 length(na.exclude(warm$CT_40))
-
 
 
 ```
 
+
+```{r plotting results ggplot}
+#the overall theme for ggplot
+T<-theme_bw()+theme(text=element_text(size=22),axis.text=element_text(size=22),axis.title.y=element_text(margin=margin(20,20,20,20)),axis.title.x=element_text(margin=margin(20,0,0,0)), plot.margin = unit(c(1, 1, 1, 0), "lines"), panel.grid.major=element_blank(), panel.grid.minor.x = element_blank(), panel.grid = element_blank(), legend.key = element_blank(),legend.position=c(.1,.85))
+```
+
+
 #Checking internal control
 ```{r}
-
 #standard deviation in CT value for each gene
 apply(warm[,14:19],2,sd,na.rm=TRUE)
 
@@ -96,41 +131,35 @@ apply(warm[,14:19],2,sd,na.rm=TRUE)
 #################################################
 ##Evaluating 18s rRNA
 #################################################
-hkg.mod1<-lm(warm$CT_18s~baittemp.ave*Site, data=warm)
+hkg.mod1<-lm((1000/warm$CT_18s)~baittemp.ave*Site+RIN_Value, data=warm)
 summary(hkg.mod1)
 
-DF<-subset(warm,warm$Site=="DF")
-HF<-subset(warm,warm$Site=="HF")
 
-plot(DF$baittemp.ave,DF$CT_18s)
-plot(HF$baittemp.ave,HF$CT_18s)
+# 18s expression by site
+ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_18s),colour=factor(Site)))+geom_point(size=2.5)+T+geom_smooth(method="lm",se=FALSE,size=2.5)+scale_color_manual(name= "", values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(30,220),breaks=seq(30,220,20),"18s rRNA gene expression (1000/CT)")
 
-#################################################
+# 18s expression overall
+ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_18s)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(30,220),breaks=seq(30,220,20),"18s rRNA gene expression (1000/CT)")
 
 #################################################
 ##Evaluating actin
 #################################################
-hkg.mod2<-lm(warm$CT_actin~baittemp.ave*Site, data=warm)
+hkg.mod2<-lm(warm$CT_actin~baittemp.ave*Site+RIN_Value, data=warm)
 summary(hkg.mod2)
 
-DF<-subset(warm,warm$Site=="DF")
-HF<-subset(warm,warm$Site=="HF")
+# overall actin expression by temp
+ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_actin)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(30,50),breaks=seq(30,50,5),"Actin gene expression (1000/CT)")
 
-plot(DF$baittemp.ave,DF$CT_actin)
-plot(HF$baittemp.ave,HF$CT_actin)
-#################################################
 
 #################################################
 ##Evaluating gapdh
 #################################################
-hkg.mod3<-lm(warm$CT_gapdh~baittemp.ave*Site, data=warm)
+hkg.mod3<-lm(warm$CT_gapdh~baittemp.ave*Site+RIN_Value, data=warm)
 summary(hkg.mod3)
 
-DF<-subset(warm,warm$Site=="DF")
-HF<-subset(warm,warm$Site=="HF")
+# overall gapdh expression by temp
+ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_gapdh)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(30,50),breaks=seq(30,50,5),"Gapdh gene expression (1000/CT)")
 
-plot(DF$baittemp.ave,DF$CT_gapdh)
-plot(HF$baittemp.ave,HF$CT_gapdh)
 #################################################
 
 
@@ -139,18 +168,27 @@ plot(HF$baittemp.ave,HF$CT_gapdh)
 
 
 #Statistics
-CT values themselves as measures of gene expression. The internal control was 18s rRNA
+#CT values themselves served as the measure of gene expression with 18s rRNA as the internal control.
+
+
 
 ## Hsp70 regression models
 ```{r stats on ct values}
-#getting rid of 49 
-#warm<-warm[-49,]
 #######################################################
 #hsp70 regression model
 #######################################################
 hsp70.mod<-lm(CT_70~baittemp.ave*Site+RIN_Value+CT_18s,data=warm)
 #summary(hsp70.mod)
 summary(stepAIC(hsp70.mod,direction="backward"))
+
+# model with actin
+hsp70.act.mod<-lm(CT_70~baittemp.ave*Site+RIN_Value+CT_actin,data=warm)
+#summary(hsp70.mod)
+summary(stepAIC(hsp70.act.mod,direction="backward"))
+
+# hsp70 plot
+ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_70)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp70 gene expression (1000/CT)")
+
 
 #visualizing hsp70 regression model
 par(mfrow=c(2,2))
@@ -167,6 +205,14 @@ par(mfrow=c(1,1))
 hsp83.mod<-lm(CT_83~baittemp.ave*Site+RIN_Value+CT_18s,data=warm)
 #summary(hsp83.mod)
 summary(stepAIC(hsp83.mod,direction="backward"))
+
+#model with actin
+hsp83.act.mod<-lm(CT_83~baittemp.ave*Site+RIN_Value+CT_actin,data=warm)
+#summary(hsp83.mod)
+summary(stepAIC(hsp83.act.mod,direction="backward"))
+
+# hsp83 plot
+ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_83),colour=factor(Site)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp83 gene expression (1000/CT)")
 
 #visualize hsp83 model
 par(mfrow=c(2,2))
@@ -185,6 +231,15 @@ hsp40.mod<-lm(CT_40~baittemp.ave*Site+RIN_Value+CT_18s,data=warm.40)
 #summary(hsp40.mod)
 summary(stepAIC(hsp40.mod,direction="both"))
 
+#MODEL WITH ACTIN
+hsp40.act.mod<-lm(CT_40~baittemp.ave*Site+RIN_Value*CT_actin,data=warm.40)
+#summary(hsp40.mod)
+summary(stepAIC(hsp40.act.mod,direction="both"))
+
+
+# hsp40 plot
+ggplot(warm.40,aes(x=baittemp.ave,y=(1000/CT_40),colour=factor(Site)))+geom_point(size=2.5)+T+geom_smooth(method="lm",se=FALSE,size=2.5)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,45),breaks=seq(25,45,5),"Hsp40 gene expression (1000/CT)")
+
 par(mfrow=c(2,2))
 plot(stepAIC(hsp40.mod,direction="backward"))
 par(mfrow=c(1,1))
@@ -192,30 +247,6 @@ par(mfrow=c(1,1))
 ```
 
 
-
-
-#Plotting gxp values
-```{r plotting results ggplot}
-#the overall theme for ggplot
-T<-theme_bw()+theme(text=element_text(size=30),axis.text=element_text(size=30), panel.grid.major=element_blank(), panel.grid.minor.x = element_blank(), panel.grid = element_blank(), legend.key = element_blank(),legend.position=c(.1,.9))
-```
-
-## hsp83 plot
-```{r hsp83 plot s}
-ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_83),colour=factor(Site)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp83 gene expression (1000/Cycle Threshold)")
-```
-
-## hsp70 plot   
-```{r hsp70 plot}
-ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_70)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp70 gene expression (1000/Cycle Threshold)")
-```
-
-## hsp40 plot
-```{r hsp40 plot}
-ggplot(warm.40,aes(x=baittemp.ave,y=(1000/CT_40),colour=factor(Site)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,45),breaks=seq(25,45,5),"Hsp40 gene expression (1000/Cycle Threshold)")
-ggplot(warm.40,aes(x=Site,y=(1000/CT_40)))+geom_boxplot()+T # gxp by by site
-
-```
 
 
 ```{r sessioninfo}
