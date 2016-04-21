@@ -41,4 +41,4 @@ In this study, we assess the potential impacts of experimental warming in wild p
 <div id='id-section4'/>
 ##Materials and methods
 
-Please [click here](https://github.com/adnguyen/Dissertation_temperature_adaptation_ants/blob/master/ANBE_protocols.md) for lab protocols and reagents. 
+Please [click here](https://github.com/adnguyen/Dissertation_temperature_adaptation_ants/blob/master/ANBE_protocols.md) for general lab protocols and reagents. For more details of the study, please [click here](https://github.com/adnguyen/2013_stressed_ants_in_warmingchambers/blob/master/Results/20150824_stressed_ants.pdf) for study details, data, metadata, and statistical analyses. 
