@@ -137,11 +137,12 @@ hkg.mod1<-lm((1000/warm$CT_18s)~baittemp.ave*Site+RIN_Value, data=warm)
 summary(hkg.mod1)
 
 
+# 18s expression overall
+ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_18s)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(30,220),breaks=seq(30,220,20),"18s rRNA gene expression (1000/CT)")
+
 # 18s expression by site
 ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_18s),colour=factor(Site)))+geom_point(size=2.5)+T+geom_smooth(method="lm",se=FALSE,size=2.5)+scale_color_manual(name= "", values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(30,220),breaks=seq(30,220,20),"18s rRNA gene expression (1000/CT)")
 
-# 18s expression overall
-ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_18s)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(30,220),breaks=seq(30,220,20),"18s rRNA gene expression (1000/CT)")
 ```
 
 ##Evaluating actin
@@ -149,8 +150,11 @@ ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_18s)))+geom_point(size=3)+T+geom_smoot
 hkg.mod2<-lm(warm$CT_actin~baittemp.ave*Site+RIN_Value, data=warm)
 summary(hkg.mod2)
 
-# overall actin expression by temp
+# overall actin expression 
 ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_actin)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(30,50),breaks=seq(30,50,5),"Actin gene expression (1000/CT)")
+
+# actin expression by site
+ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_actin),colour=factor(Site)))+geom_point(size=2.5)+T+geom_smooth(method="lm",se=FALSE,size=2.5)+scale_color_manual(name= "", values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(30,55),breaks=seq(30,55,5),"Actin gene expression (1000/CT)")
 
 ```
 
@@ -159,10 +163,11 @@ ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_actin)))+geom_point(size=3)+T+geom_smo
 hkg.mod3<-lm(warm$CT_gapdh~baittemp.ave*Site+RIN_Value, data=warm)
 summary(hkg.mod3)
 
-# overall gapdh expression by temp
+# overall gapdh expression 
 ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_gapdh)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(30,50),breaks=seq(30,50,5),"Gapdh gene expression (1000/CT)")
 
-
+# gapdh expression by site
+ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_gapdh),colour=factor(Site)))+geom_point(size=2.5)+T+geom_smooth(method="lm",se=FALSE,size=2.5)+scale_color_manual(name= "", values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(30,55),breaks=seq(30,55,5),"Gapdh gene expression (1000/CT)")
 
 
 
@@ -259,6 +264,12 @@ par(mfrow=c(2,2))
 plot(stepAIC(hsp40.mod,direction="backward"))
 par(mfrow=c(1,1))
 #######################################################
+```
+
+
+
+```{r}
+
 ```
 
 
