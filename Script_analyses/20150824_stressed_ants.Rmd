@@ -178,7 +178,7 @@ ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_gapdh),colour=factor(Site)))+geom_poin
 ###CT values themselves served as the measure of gene expression with 18s rRNA and actin serving as internal controls.
 
 
-## Hsp83 regression models
+## *Hsp83* regression models
 ```{r tidy=TRUE}
 #######################################################
 #hsp83 regresssion model
@@ -194,33 +194,26 @@ hsp83.act.mod<-lm(CT_83~baittemp.ave*Site+RIN_Value+CT_actin,data=warm)
 summary(stepAIC(hsp83.act.mod,direction="backward"))
 length(resid(hsp83.act.mod))
 
-# hsp83 plot by site
-ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_83),colour=factor(Site)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp83 gene expression (1000/CT)")
 
-# hsp83 plot overall
-ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_83)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp83 gene expression (1000/CT)")
+# Visualize hsp83 model
+##par(mfrow=c(2,2))
+##plot(stepAIC(hsp83.mod,direction="backward"))
+##par(mfrow=c(1,1))
 
-#visualize hsp83 model
-#par(mfrow=c(2,2))
-#plot(stepAIC(hsp83.mod,direction="backward"))
-#par(mfrow=c(1,1))
-
-#construct model to control for HKG and then plot the residuals as a function of temperature
+# Construct model to control for HKG 
 warm83<-subset(warm,warm$CT_83 !="NA"); dim(warm83)
 warm83_2<-subset(warm83,warm83$CT_18s !="NA");dim(warm83_2)
 
 res.mod1<-lm(CT_83~CT_18s,data=warm83_2);summary(res.mod1)
-#test
-#test1<-lm(CT_83~baittemp.ave*Site+RIN_Value+CT_18s,data=warm83);summary(test1)
+##test
+##test1<-lm(CT_83~baittemp.ave*Site+RIN_Value+CT_18s,data=warm83);summary(test1)
 warm83_2$hsp83.resids<-scale(resid(res.mod1),center=TRUE)*-1
 
-hsp83.plot<-ggplot(warm83_2,aes(x=baittemp.ave,y=(hsp83.resids),colour=factor(Site)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(-3,3),breaks=seq(-3,3,.5),"Standardized residuals of Hsp83 gene expression")
 
-hsp83.plot
 ```
 
 
-## Hsp70 regression models
+## *Hsp70* regression models
 ```{r tidy=TRUE}
 #######################################################
 #hsp70 regression model
@@ -235,35 +228,28 @@ summary(stepAIC(hsp70.mod,direction="backward"))
 hsp70.act.mod<-lm(CT_70~baittemp.ave*Site+RIN_Value+CT_actin,data=warm)
 summary(stepAIC(hsp70.act.mod,direction="backward"))
 
-# hsp70 model by site
-ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_70),colour=factor(Site)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp70 gene expression (1000/CT)")
-
-# hsp70 plot overall
-ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_70)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp70 gene expression (1000/CT)")
 
 
-# visualizing hsp70 regression model
-par(mfrow=c(2,2))
-plot(stepAIC(hsp70.mod,direction="backward"))
-par(mfrow=c(1,1))
+# Visualizing hsp70 regression model
+##par(mfrow=c(2,2))
+##plot(stepAIC(hsp70.mod,direction="backward"))
+##par(mfrow=c(1,1))
 
-#construct model to control for HKG and then plot the residuals as a function of temperature
+# Construct model to control for HKG and then plot the residuals as a function of temperature
 
 warm70<-subset(warm,warm$CT_70 != "NA");dim(warm70)
 warm70_2<-subset(warm70,warm70$CT_18s !="NA"); dim(warm70_2)
-# getting residuals
+
+# Getting residuals
 res.mod2<-lm(CT_70~+CT_18s,data=warm70_2)
 #resid(resid.mod2);length(resid(resid.mod2))
 warm70_2$hsp70_resids<-scale(resid(res.mod2),center=TRUE)*-1
 
-#plotting the residuals as a function of bait temperature 
-hsp70.plot<-ggplot(warm70_2,aes(x=baittemp.ave,y=hsp70_resids))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(-2.5,3),breaks=seq(-3,3,.5),"Standardized residuals of Hsp70 gene expression")
-hsp70.plot
 
 ```
 
 
-## Hsp40 regression models
+## *Hsp40* regression models
 ```{r tidy=TRUE}
 #######################################################
 #hsp40 regression model
@@ -280,11 +266,6 @@ hsp40.act.mod<-lm(CT_40~baittemp.ave*Site+RIN_Value*CT_actin,data=warm.40)
 summary(stepAIC(hsp40.act.mod,direction="both"))
 
 
-# hsp40 plot by site
-ggplot(warm.40,aes(x=baittemp.ave,y=(1000/CT_40),colour=factor(Site)))+geom_point(size=2.5)+T+geom_smooth(method="lm",se=FALSE,size=2.5)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,45),breaks=seq(25,45,5),"Hsp40 gene expression (1000/CT)")
-
-# hsp40 plot overall
-ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_40)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,45),breaks=seq(25,45,5),"Hsp40 gene expression (1000/CT)")
 
 # visualizing hsp40 regression model
 #par(mfrow=c(2,2))
@@ -293,7 +274,7 @@ ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_40)))+geom_point(size=3)+T+geom_smooth
 #######################################################
 
 
-#construct model to control for HKG and then plot the residuals as a function of temperature
+# Construct model to control for HKG and then plot the residuals as a function of temperature
 
 warm40<-subset(warm,warm$CT_40 != "NA");dim(warm40)
 warm40_2<-subset(warm40,warm40$CT_18s !="NA"); dim(warm40_2)
@@ -302,16 +283,53 @@ res.mod3<-lm(CT_40~+CT_18s,data=warm40_2)
 #resid(resid.mod2);length(resid(resid.mod2))
 warm40_2$hsp40_resids<-scale(resid(res.mod3),center=TRUE)*-1
 
-#plotting the residuals as a function of bait temperature 
-hsp40.plot<-ggplot(warm40_2,aes(x=baittemp.ave,y=hsp40_resids))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(-2.5,3),breaks=seq(-3,3,.5),"Standardized residuals of Hsp40 gene expression")
-hsp40.plot
-
 
 ```
 
+# Plotting regression models
+## *Hsp83* expression as a function of bait temperature
+```{r tidy=TRUE}
+# hsp83 plot by site
+ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_83),colour=factor(Site)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Bait Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp83 gene expression (1000/CT)")
 
-# three panel figures
-```{r making 3 panel figures}
+# hsp83 plot overall
+ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_83)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Bait Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp83 gene expression (1000/CT)")
+
+# hsp 83 plot controling for HKG (18s)- standarized residuals of hsp83
+hsp83.plot<-ggplot(warm83_2,aes(x=baittemp.ave,y=(hsp83.resids),colour=factor(Site)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Bait Temperature (°C)")+scale_y_continuous(limits=c(-3,3),breaks=seq(-3,3,.5),"Standardized residuals of Hsp83 gene expression")
+
+hsp83.plot
+```
+
+## *Hsp70* expression as a function of bait temperature
+```{r tidy=TRUE}
+# hsp70 model by site
+ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_70),colour=factor(Site)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Bait Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp70 gene expression (1000/CT)")
+
+# hsp70 plot overall
+ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_70)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Bait Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp70 gene expression (1000/CT)")
+
+# hsp70 plot controling for HKG (18s)- standarized residuals of hsp70
+hsp70.plot<-ggplot(warm70_2,aes(x=baittemp.ave,y=hsp70_resids))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Bait Temperature (°C)")+scale_y_continuous(limits=c(-2.5,3),breaks=seq(-3,3,.5),"Standardized residuals of Hsp70 gene expression")
+hsp70.plot
+```
+
+## *Hsp40* expression as a function of bait temperature
+```{r tidy=TRUE}
+# hsp40 plot by site
+ggplot(warm.40,aes(x=baittemp.ave,y=(1000/CT_40),colour=factor(Site)))+geom_point(size=2.5)+T+geom_smooth(method="lm",se=FALSE,size=2.5)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Bait Temperature (°C)")+scale_y_continuous(limits=c(25,45),breaks=seq(25,45,5),"Hsp40 gene expression (1000/CT)")
+
+# hsp40 plot overall
+ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_40)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Bait Temperature (°C)")+scale_y_continuous(limits=c(25,45),breaks=seq(25,45,5),"Hsp40 gene expression (1000/CT)")
+
+# hsp40 plot controling for HKG (18s)- standarized residuals of hsp40
+hsp40.plot<-ggplot(warm40_2,aes(x=baittemp.ave,y=hsp40_resids))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Bait Temperature (°C)")+scale_y_continuous(limits=c(-2.5,3),breaks=seq(-3,3,.5),"Standardized residuals of Hsp40 gene expression")
+hsp40.plot
+```
+
+
+## Three panel figures
+```{r tidy=TRUE}
 library(gridExtra)
 grid.arrange(hsp83.plot,hsp70.plot,hsp40.plot,ncol=3)
 
