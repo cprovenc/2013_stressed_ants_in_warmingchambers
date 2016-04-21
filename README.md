@@ -11,6 +11,7 @@ Funding source:   National Science Foundation, Division of Environmental Biology
 1. [Project Overview](#id-section1)
 2. [Objectives and Hypotheses](#id-section2)
 3. [Repository Layout](#id-section3)
+4. [Materials and Methods](#id-section4)
 
 <div id='id-section1'/>
 ##Project Overview
@@ -35,3 +36,9 @@ In this study, we assess the potential impacts of experimental warming in wild p
     * **Figures/** : saved figures by date 
     * 20150824_stressed_ants.pdf : analysis pdf from the Script_Analyses folder (most digestable view of data, metadata, and analyses)    
   4. **Scripts_Analyses/** : I use [R](https://www.r-project.org/) and [Rstudio](https://www.rstudio.com/) for data analysis and data visualization and convert ([knit](http://yihui.name/knitr/)) these analyses into pdfs(see results). 
+
+
+<div id='id-section4'/>
+##Materials and methods
+
+Please [click here](https://github.com/adnguyen/Dissertation_temperature_adaptation_ants/blob/master/ANBE_protocols.md) for lab protocols and reagents. 
