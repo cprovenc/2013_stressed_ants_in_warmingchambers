@@ -192,6 +192,7 @@ summary(stepAIC(hsp83.mod,direction="backward"))
 # MODEL WITH ACTIN- no interaction or site effect seen
 hsp83.act.mod<-lm(CT_83~baittemp.ave*Site+RIN_Value+CT_actin,data=warm)
 summary(stepAIC(hsp83.act.mod,direction="backward"))
+length(resid(hsp83.act.mod))
 
 # hsp83 plot by site
 ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_83),colour=factor(Site)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp83 gene expression (1000/CT)")
@@ -200,9 +201,21 @@ ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_83),colour=factor(Site)))+geom_point(s
 ggplot(warm,aes(x=baittemp.ave,y=(1000/CT_83)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(25,50),breaks=seq(25,50,5),"Hsp83 gene expression (1000/CT)")
 
 #visualize hsp83 model
-par(mfrow=c(2,2))
-plot(stepAIC(hsp83.mod,direction="backward"))
-par(mfrow=c(1,1))
+#par(mfrow=c(2,2))
+#plot(stepAIC(hsp83.mod,direction="backward"))
+#par(mfrow=c(1,1))
+
+#construct model to control for HKG and then plot the residuals as a function of temperature
+warm83<-subset(warm,warm$CT_83 !="NA"); dim(warm83)
+warm83_2<-subset(warm83,warm83$CT_18s !="NA");dim(warm83_2)
+
+res.mod1<-lm(CT_83~CT_18s,data=warm83_2);summary(res.mod1)
+#test
+#test1<-lm(CT_83~baittemp.ave*Site+RIN_Value+CT_18s,data=warm83);summary(test1)
+warm83_2$hsp83.resids<-scale(resid(res.mod1),center=TRUE)*-1
+
+ggplot(warm83_2,aes(x=baittemp.ave,y=(hsp83.resids),colour=factor(Site)))+geom_point(size=3)+T+geom_smooth(method="lm",se=FALSE,size=3)+scale_color_manual(name="",values=c("red","blue"))+scale_x_continuous(limits=c(22,34),breaks=seq(22,34,2),"Temperature (°C)")+scale_y_continuous(limits=c(-3,3),breaks=seq(-3,3,.5),"Standardized residuals of Hsp83 gene expression")
+
 ```
 
 
